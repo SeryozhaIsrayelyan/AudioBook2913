@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { readFile, rename, unlink } from 'fs';
+import { existsSync, readFile, rename, unlink } from 'fs';
 
 import { Repository } from 'typeorm';
 import { AddAudioDto } from './dto/add-audio.dto';
@@ -20,7 +20,7 @@ export class BooksService {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? book['id'] : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
       });  
     }
 
@@ -38,7 +38,7 @@ export class BooksService {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? book['id'] : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
       });
     }
    
@@ -56,7 +56,7 @@ export class BooksService {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? book['id'] : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
       });  
     }
 
@@ -72,7 +72,7 @@ export class BooksService {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? book['id'] : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
       });  
     }
     return books;
@@ -127,7 +127,7 @@ export class BooksService {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? book['id'] : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
       });  
     }
     
@@ -145,7 +145,7 @@ export class BooksService {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? book['id'] : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
     }
     
     return book;
