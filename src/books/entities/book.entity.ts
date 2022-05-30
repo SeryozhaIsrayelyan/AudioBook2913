@@ -18,17 +18,23 @@ export class Book extends BaseEntity {
   @Column()
   nameArabic: string;
 
-  @Column()
+  @Column({ nullable: true})
   descriptionEnglish: string;
 
-  @Column()
+  @Column({ nullable: true})
   descriptionArabic: string;
 
   @Column()
-  author: string;
+  authorEnglish: string;
+
+  @Column()
+  authorArabic: string;
 
   @Column({ default: 'png' })
   imageext: string;
+
+  @Column({ default: false})
+  isImage: boolean;
 
   @Column({ default: 100 })
   kickoffPledge: number;
@@ -51,13 +57,13 @@ export class Book extends BaseEntity {
   @Column({default: false})
   isPdfAdded: boolean;
 
-  @Column()
+  @Column({nullable:true})
   narrator: number;
 
   @Column({ default: 1 })
   status: number;
 
-  @Column()
+  @Column({nullable:true})
   genre: number;
 
   @Column()

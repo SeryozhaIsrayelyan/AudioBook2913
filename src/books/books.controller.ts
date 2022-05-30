@@ -22,6 +22,7 @@ import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { diskStorage } from 'multer';
 import { AddAudioDto } from './dto/add-audio.dto';
+import { CreateNotificationDto } from './dto/create-notification.dto';
 
 @Controller('books')
 export class BooksController {
@@ -64,6 +65,26 @@ export class BooksController {
   ) {
     return this.booksService.createBook(createBookDto, req.user, file);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('createNotification')
+  createBookNotification(
+    @Body() createNotificationDto: CreateNotificationDto,
+    @Request() req,
+  ) {
+    return this.booksService.createBookNotification(createNotificationDto, req.user);
+  }
+
+  @Get('getAllNotifications')
+  getAllNotifications() {
+    return this.booksService.getAllNotifications();
+  }
+
+  @Get('getLastNotification')
+  getLastNotification() {
+    return this.booksService.getLastNotification();
+  }
+  
 
   @UseGuards(JwtAuthGuard)
   @Get('approveBook')

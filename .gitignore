@@ -36,3 +36,9 @@ lerna-debug.log*
 
 .vscode
 package-lock.json
+
+.public/booksimages/*
+!.public/booksimages/default.png
+
+.public/usersimages/*
+!.public/usersimages/default.png
