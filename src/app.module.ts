@@ -86,7 +86,7 @@ const entities = [
     MulterModule.register({
       dest: './public',
     }),
-    
+
     UsersModule,
     AuthModule,
     BooksModule,

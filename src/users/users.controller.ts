@@ -29,16 +29,10 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    const x = await this.usersService.create(createUserDto);
-    // return this.mailsService.sendMail(x['email'], x['verificationCode']);
-    return this.mailsService.sendMail(x['email'], x['verificationCode']);
-  }
-
-  @Get('testEmail')
-  async testEmail() {
     // const x = await this.usersService.create(createUserDto);
     // return this.mailsService.sendMail(x['email'], x['verificationCode']);
-    return this.mailsService.sendMailNEW('liteseg718@akapple.com');
+    // return this.mailsService.sendMail(x['email'], x['verificationCode']);
+    return await this.usersService.create(createUserDto);
   }
 
   @Post('confirmEmail')
@@ -72,10 +66,7 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('getPersonalInfo')
-  getPersonalInfo(
-    @Body() updateUserInfo: UpdateUserInfoDto,
-    @Request() req,
-  ) {
+  getPersonalInfo(@Body() updateUserInfo: UpdateUserInfoDto, @Request() req) {
     return this.usersService.getPersonalInfo(updateUserInfo, req.user);
   }
 }
