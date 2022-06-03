@@ -9,6 +9,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  Response,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -72,19 +73,25 @@ export class BooksController {
     @Body() createNotificationDto: CreateNotificationDto,
     @Request() req,
   ) {
-    return this.booksService.createBookNotification(createNotificationDto, req.user);
+    return this.booksService.createBookNotification(
+      createNotificationDto,
+      req.user,
+    );
   }
 
   @Get('getAllNotifications')
-  getAllNotifications() {
-    return this.booksService.getAllNotifications();
+  async getAllNotifications(@Response() res) {
+    const books = await this.booksService.getAllNotifications();
+    return await res
+      .append('X-Total-Count', books[1])
+      .append('Access-Control-Expose-Headers', 'X-Total-Count')
+      .json(books[0]);
   }
 
   @Get('getLastNotification')
   getLastNotification() {
     return this.booksService.getLastNotification();
   }
-  
 
   @UseGuards(JwtAuthGuard)
   @Get('approveBook')
@@ -129,5 +136,4 @@ export class BooksController {
   ) {
     return this.booksService.addAudio(addAudioDto, req.user, file);
   }
-
 }
