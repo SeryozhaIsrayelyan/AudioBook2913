@@ -7,6 +7,7 @@ import { AddAudioDto } from './dto/add-audio.dto';
 import { CreateBookDto } from './dto/create-book.dto';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { FindSamplesDto } from './dto/find-samples.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 import { Book } from './entities/book.entity';
 
@@ -15,16 +16,27 @@ export class BooksService {
   async findAll() {
     const books = await Book.find();
 
-    if(books){
+    if (books) {
       books.forEach((book) => {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
-      });  
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
+      });
     }
 
-    return books;
+    return {"books":books};
   }
 
   async findSamples() {
@@ -33,49 +45,145 @@ export class BooksService {
         issample: true,
       },
     });
-    if(books){
+    if (books) {
       books.forEach((book) => {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
       });
     }
-   
 
-    return books;
+    return {"books":books};
   }
 
   async findDefault() {
     const books = await Book.createQueryBuilder('book')
-    .where('issample = false')
-    .getMany();
+      .where('issample = false')
+      .getMany();
 
-    if(books){
+    if (books) {
       books.forEach((book) => {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
-      });  
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
+      });
     }
 
-    return books;
+    return {"books":books};
   }
 
   async getApproved() {
-    const books =  await Book.createQueryBuilder('book')
-      .where('book.status != :status', { status: 1 })
+    const books = await Book.createQueryBuilder('book')
+      .where('book.status = :status', { status: 2 })
       .getMany();
-    if(books){
+    if (books) {
       books.forEach((book) => {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
-      });  
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
+      });
     }
-    return books;
+    return {"books":books};
+  }
+
+  async getByStatus(
+    status: number
+  ) {
+    const books = await Book.createQueryBuilder('book')
+      .where('book.status = :status', { status: status })
+      .orderBy('id', 'DESC')
+      // .getManyAndCount();
+      .getMany();
+
+    if (books) {
+      books.forEach((book) => {
+        ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
+          delete book[element];
+        });
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
+      });
+      
+    }
+    return {"books":books};
+  }
+
+  async getByStatusById(
+    status: number,
+    id: number
+  ) {
+    const book = await Book.createQueryBuilder('book')
+      .where('book.status = :status', { status: status })
+      .where('book.id = :id', {id: id})
+      .getOneOrFail();
+
+      if (book) {
+        ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
+          delete book[element];
+        });
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
+   
+        return [book,1];
+      }
+  
+      return [book,0];
   }
 
   async createBook(
@@ -105,52 +213,143 @@ export class BooksService {
     createNotificationDto: CreateNotificationDto,
     user: { userId: number; userName: string; userRole: string },
   ) {
-      try {
-        createNotificationDto['usersuggested'] = user.userId;
-        createNotificationDto['status'] = 1;
-        const newbook = await Book.create(createNotificationDto);
-        await newbook.save();
-        return {'message': 'success'};
-      } catch (error) {
-        return {'message': 'error'};
-      }
+    try {
+      createNotificationDto['usersuggested'] = user.userId;
+      createNotificationDto['status'] = 1;
+      const newbook = await Book.create(createNotificationDto);
+      await newbook.save();
+      return { message: 'success' };
+    } catch (error) {
+      return { message: 'error' };
+    }
   }
 
   async getAllNotifications() {
     const books = await Book.createQueryBuilder('book')
-    .where('book.status = :status', { status: 1 })
-    .orderBy('id', 'DESC')
-    .getMany();
+      .where('status = :status', { status: 1 })
+      .orderBy('id', 'DESC')
+      .getManyAndCount();
 
-    if(books){
-      books.forEach((book) => {
+      // .innerJoin('status', 'book.status = status.id')
+      // .select('status.name as statusName, books.*')
+
+    if (books[0]) {
+      books[0].forEach((book) => {
         ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
           delete book[element];
         });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
-      });  
+        book['imageLink'] =
+          process.env.HOST_URL + ':3000/' +
+          'booksimages/' +
+          (book['isImage']
+            ? existsSync(
+                './public/booksimages/' + book['id'] + '.' + book['imageext'],
+              )
+              ? book['id']
+              : 'default'
+            : 'default') +
+          '.' +
+          book['imageext'];
+      });
+      
     }
-    
     return books;
   }
-  
-  
+
   async getLastNotification() {
     const book = await Book.createQueryBuilder('book')
-    .where('book.status = :status', { status: 9 })
-    .orderBy('id', 'DESC')
-    .getOne();
-    
-    if(book){
-        ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
-          delete book[element];
-        });
-        book['imageLink'] = process.env.HOST_URL + 'booksimages/'+(book['isImage'] ? (existsSync('./public/booksimages/'+book['id']+'.' + book['imageext']) ? book['id'] : 'default') : 'default' ) + '.' + book['imageext'];
+      .where('status = :status', { status: 1 })
+      .orderBy('id', 'DESC')
+      .getOne();
+
+    if (book) {
+      ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
+        delete book[element];
+      });
+      book['imageLink'] =
+        process.env.HOST_URL + ':3000/' +
+        'booksimages/' +
+        (book['isImage']
+          ? existsSync(
+              './public/booksimages/' + book['id'] + '.' + book['imageext'],
+            )
+            ? book['id']
+            : 'default'
+          : 'default') +
+        '.' +
+        book['imageext'];
+
+	return [[book],1];
     }
-    
-    return book;
+
+    return [[book],0];
   }
-  
+
+  async getNotification(id: number) {
+    const book = await Book.createQueryBuilder()
+      .where('id = :id AND status = :status', { id: id, status: 1 })
+      .getOneOrFail();
+
+    if (book) {
+      ['issample', 'createdAt', 'updatedAt'].forEach((element) => {
+        delete book[element];
+      });
+      book['imageLink'] =
+        process.env.HOST_URL + ':3000/' +
+        'booksimages/' +
+        (book['isImage']
+          ? existsSync(
+              './public/booksimages/' + book['id'] + '.' + book['imageext'],
+            )
+            ? book['id']
+            : 'default'
+          : 'default') +
+        '.' +
+        book['imageext'];
+ 
+	    return [book,1];
+    }
+
+    return [book,0];
+  }
+
+  async acceptNotification(
+    updateNotification: UpdateBookDto,
+    // user: { userId: number; userName: string; userRole: string },
+    // file,
+  ) {
+    // if (file) {
+    //   updateNotification['imageext'] = file.filename.split('.')[1];
+    //   updateNotification['status'] = 2;
+    //   const result = await Book.update(updateNotification['id'], updateNotification);
+    //   await rename(
+    //     file.path,
+    //     'public\\booksimages\\' + updateNotification['id'] + '.' + updateNotification['imageext'],
+    //     function (err) {
+    //       if (err) console.log('Error: ' + err);
+    //     },
+    //   );
+    //   return 'success';
+    // }
+    // return 'error';
+      // updateNotification['status'] = 2;
+      // if(user.userRole == 'administrator') {
+        const result = await Book.update({id:updateNotification['id']}, updateNotification);
+        // return result ? 'success' : 'error';
+        return updateNotification;
+        // return 'success';
+      // }
+      // else{
+      //   return 'You need to be an administrator';
+      // }
+      
+  }
+
+  // async deleteNotification(id: number, user: { userId: number; userName: string; userRole: string }) {
+    async deleteNotification(id: number) {
+    // return (user.userRole == 'administrator' ?  await Book.createQueryBuilder('book').update().set({ status: 3 }).where("id = :id", { id: id }).execute() : 'You need to be an administrator');
+      return await Book.createQueryBuilder('book').update().set({ status: 7 }).where("id = :id", { id: id }).execute();
+  }
 
   async approveBook(
     bookId: number,
@@ -220,7 +419,7 @@ export class BooksService {
           usersuggested: user.userId,
         });
         if (!currentbook) {
-          await unlink(file.path,function (err) {
+          await unlink(file.path, function (err) {
             if (err) console.log('Error: ' + err);
           });
           throw new HttpException(
@@ -231,8 +430,8 @@ export class BooksService {
             HttpStatus.FORBIDDEN,
           );
         }
-        if(user.userRole != 'administrator') {
-          await unlink(file.path,function (err) {
+        if (user.userRole != 'administrator') {
+          await unlink(file.path, function (err) {
             if (err) console.log('Error: ' + err);
           });
           throw new HttpException(
@@ -288,7 +487,7 @@ export class BooksService {
           usersuggested: user.userId,
         });
         if (!currentbook) {
-          await unlink(file.path,function (err) {
+          await unlink(file.path, function (err) {
             if (err) console.log('Error: ' + err);
           });
           throw new HttpException(
@@ -299,8 +498,8 @@ export class BooksService {
             HttpStatus.FORBIDDEN,
           );
         }
-        if(user.userRole != 'administrator') {
-          await unlink(file.path,function (err) {
+        if (user.userRole != 'administrator') {
+          await unlink(file.path, function (err) {
             if (err) console.log('Error: ' + err);
           });
           throw new HttpException(
@@ -314,10 +513,7 @@ export class BooksService {
         const fileExtension = file.filename.split('.')[1];
         await rename(
           file.path,
-          'public\\bookspdfs\\' +
-            addAudioDto.id +
-            '.' +
-            fileExtension,
+          'public\\bookspdfs\\' + addAudioDto.id + '.' + fileExtension,
           function (err) {
             if (err) console.log('Error: ' + err);
           },

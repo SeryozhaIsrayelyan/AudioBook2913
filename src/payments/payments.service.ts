@@ -3,8 +3,10 @@ import { UpdateCardDto } from './dto/update-card.dto';
 import { Card } from './entities/card.entity';
 import { configure, payment } from 'paypal-rest-sdk';
 
+
 @Injectable()
 export class PaymentsService {
+
   async updateCard(
     updateCardInfo: UpdateCardDto,
     user: { userId: number; userName: string; userRole: string },
@@ -40,13 +42,13 @@ export class PaymentsService {
     }
   }
 
-  async pay() {
+  pay() {
     configure({
-      mode: 'sandbox',
+      mode: process.env.PAYPAL_ENVIRONMENT,
       client_id:
-        'AfM02pqT3R509zJ0YoxqZYmSuka7B2nMBnVEL5v2ITCQjPb-sPt8tqUTxs8s-HUqcEJU0y2goQbRy9LL',
+        process.env.PAYPAL_CLIENT_ID,
       client_secret:
-        'ELCYkE5qj_IGbkxkq_pgq1zBc8I671ZNwieuylYlvqJ_49dwCBBjS37M3P0riwERrwh56A5i_42AyjEC',
+        process.env.PAYPAL_CLIENT_SECRET,
     });
 
     const create_payment_json = {
@@ -79,19 +81,24 @@ export class PaymentsService {
         },
       ],
     };
-
-    await payment.create(create_payment_json, function (error, payment) {
+    
+    var paymentLink:string = 'asd';
+    payment.create(create_payment_json, function (error, payment) {
       if (error) {
         throw error;
       } else {
         for (let i = 0; i < payment.links.length; i++) {
           if (payment.links[i].rel === 'approval_url') {
             console.log(payment.links[i].href);
+            // return payment.links[i].href;
+            paymentLink = payment.links[i].href;
             break;
           }
         }
       }
     });
+
+    return paymentLink;
   }
 
   async success(query: any) {

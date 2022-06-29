@@ -63,6 +63,9 @@ export class Book extends BaseEntity {
   @Column({ default: 1 })
   status: number;
 
+  @Column({ default: 1 })
+  license: number;
+
   @Column({nullable:true})
   genre: number;
 
@@ -74,6 +77,9 @@ export class Book extends BaseEntity {
   
   @Column({ default: 0 })
   issample: boolean;
+
+  @Column({nullable:true})
+  imageLink:string;
 
   @Column()
   @CreateDateColumn()

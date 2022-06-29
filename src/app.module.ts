@@ -29,6 +29,8 @@ import { Card } from './payments/entities/card.entity';
 import { ContactUsModule } from './contact-us/contact-us.module';
 import { ContactUs } from './contact-us/entities/contact-us.entity';
 import { ContactUsOptions } from './contact-us/entities/contact-us-options.entity';
+import { LicensesModule } from './licenses/licenses.module';
+import { License } from './licenses/entities/license.entity';
 
 const entities = [
   User,
@@ -39,6 +41,7 @@ const entities = [
   Card,
   ContactUs,
   ContactUsOptions,
+  License,
 ];
 
 @Module({
@@ -86,7 +89,7 @@ const entities = [
     MulterModule.register({
       dest: './public',
     }),
-    
+
     UsersModule,
     AuthModule,
     BooksModule,
@@ -96,6 +99,7 @@ const entities = [
     GenresModule,
     PaymentsModule,
     ContactUsModule,
+    LicensesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

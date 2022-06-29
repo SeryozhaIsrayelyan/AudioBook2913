@@ -9,6 +9,7 @@ import {
   Request,
   UploadedFile,
   Query,
+  Res,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UpdateCardDto } from './dto/update-card.dto';
@@ -25,8 +26,8 @@ export class PaymentsController {
   }
 
   @Get('pay')
-  pay() {
-    return this.paymentService.pay();
+  async pay() {
+    return await this.paymentService.pay();
   }
 
   @Get('success')

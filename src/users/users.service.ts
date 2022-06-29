@@ -29,11 +29,13 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      if(await User.findOne({
-        where: {
-          email: createUserDto.email,
-        },
-      })) {
+      if (
+        await User.findOne({
+          where: {
+            email: createUserDto.email,
+          },
+        })
+      ) {
         throw new HttpException(
           {
             status: HttpStatus.FORBIDDEN,
@@ -52,7 +54,7 @@ export class UsersService {
         );
       }
       await user.save();
-  
+
       ['password', 'createdAt', 'updatedAt'].forEach((element) => {
         delete user[element];
       });
@@ -63,7 +65,6 @@ export class UsersService {
         error?.response?.status,
       );
     }
-    
   }
 
   async confirmVerification(confirmEmailDto: ConfirmEmailDto) {
@@ -185,35 +186,40 @@ export class UsersService {
     }
   }
 
-
-  async getPersonalInfo( updateUserInfo: UpdateUserInfoDto,
-    user: { userId: number; userName: string; userRole: string },) {
-      try {
-        var currentuser = await User.findOne({
-          id: user.userId,
-        });
-        if (!currentuser) {
-          throw new HttpException(
-            {
-              status: HttpStatus.FORBIDDEN,
-              error: 'User not found',
-            },
-            HttpStatus.FORBIDDEN,
-          );
-        }
-        delete currentuser.password;
-        delete currentuser.verificationCode;
-        delete currentuser.createdAt;
-        delete currentuser.updatedAt;
-        currentuser['imagePath'] = process.env.HOST_URL + 'public/usersimages/'+currentuser.id+'.'+currentuser.avatarExtension;
-        delete currentuser.avatarExtension;
-        return currentuser;
-      } catch (error) {
+  async getPersonalInfo(
+    updateUserInfo: UpdateUserInfoDto,
+    user: { userId: number; userName: string; userRole: string },
+  ) {
+    try {
+      const currentuser = await User.findOne({
+        id: user.userId,
+      });
+      if (!currentuser) {
         throw new HttpException(
-          { status: error?.response?.status, error: error?.response?.error },
-          error?.response?.status,
+          {
+            status: HttpStatus.FORBIDDEN,
+            error: 'User not found',
+          },
+          HttpStatus.FORBIDDEN,
         );
       }
+      delete currentuser.password;
+      delete currentuser.verificationCode;
+      delete currentuser.createdAt;
+      delete currentuser.updatedAt;
+      currentuser['imagePath'] =
+        process.env.HOST_URL +
+        'public/usersimages/' +
+        currentuser.id +
+        '.' +
+        currentuser.avatarExtension;
+      delete currentuser.avatarExtension;
+      return currentuser;
+    } catch (error) {
+      throw new HttpException(
+        { status: error?.response?.status, error: error?.response?.error },
+        error?.response?.status,
+      );
     }
-
+  }
 }
